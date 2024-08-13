@@ -1,0 +1,37 @@
+name: Build next image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs: {}
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    build-image:
+        name: Build and push image
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Docker GitHub auth
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: token
+            password: ${{ secrets.WRITE_PACKAGES_TOKEN }}
+
+
+        - name: Build and push
+          uses: docker/build-push-action@v5
+          with:
+            platforms: linux/amd64
+            context: "."
+            file: "next.Dockerfile"
+            tags: ghcr.io/roamingowl/playwright-next:latest, ghcr.io/roamingowl/playwright-next:${{ github.sha }}
+            push: true
