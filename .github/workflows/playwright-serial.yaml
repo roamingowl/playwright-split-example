@@ -1,4 +1,4 @@
-name: Cypress running serially
+name: Playwright running serially
 
 on:
   workflow_dispatch:

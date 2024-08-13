@@ -1,4 +1,4 @@
-name: Cypress running in parallel
+name: Playwright running in parallel
 
 on:
   workflow_dispatch:
