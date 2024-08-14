@@ -9,11 +9,11 @@ defaults:
         shell: bash
 
 jobs:
-    cypress-paralel:
+    playwright-paralel:
         strategy:
             matrix:
               split_index: [1, 2, 3]
-        name: Cypress
+        name: Playwright
         runs-on: ubuntu-latest
         steps:
         - name: Checkout
@@ -43,26 +43,23 @@ jobs:
           id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
           with:
             path: ${{ steps.npm-cache-dir.outputs.dir }}
-            key: split-${{ runner.name }}${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            key: pr-playwright-split-${{ matrix.split_index }}-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
             restore-keys: |
-              ${{ runner.os }}-node-
+              pr-playwright-split-${{ matrix.split_index }}-${{ runner.os }}-node-
 
         - run: npm i
 
-        - name: Run cypress
+        - name: run tests
           env:
-            CYPRESS_SPLIT_INDEX: ${{ matrix.split_index }}
-            CYPRESS_SPLIT: 3
-            CYPRESS_NEXT_APP_URL: http://next-app:3000
-            CYPRESS_SPEC: cypress/e2e/**/*.cy.ts
+            SPLIT_INDEX: ${{matrix.split_index}}
           run: |
-              docker compose run --rm cypress
+            npx playwright install --shard=${{matrix.split_index}}/3 --with-deps chromium
 
         - name: Upload reports' artifacts
           if: success() || failure()
           uses: actions/upload-artifact@v4
           with:
-            name: cypress_parale_artifact_${{ matrix.split_index }}
+            name: playwright_parale_artifact_${{ matrix.split_index }}
             if-no-files-found: ignore
             path: ctrf/*.json
             retention-days: 1
@@ -70,7 +67,7 @@ jobs:
     results:
         runs-on: ubuntu-latest
         if: always()
-        needs: cypress-paralel
+        needs: playwright-paralel
         steps:
           - uses: actions/checkout@v4
 
@@ -81,7 +78,7 @@ jobs:
 
           - name: Publish CTRF Test Summary Results
             run: |
-              ls -al downloaded_artifacts/cypress_parale_artifact_1
+              ls -al downloaded_artifacts/playwright_parale_artifact_1
               mkdir -p ctrf
               cp -v downloaded_artifacts/*/*.json ctrf
               npx ctrf merge ctrf
