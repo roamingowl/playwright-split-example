@@ -54,7 +54,7 @@ jobs:
           run: |
               npx playwright test 
 
-#        - name: Publish CTRF Test Summary Results
-#          run: |
-#            npx github-actions-ctrf summary ctrf/ctrf-report.json
-#          if: always()
+        - name: Publish CTRF Test Summary Results
+          run: |
+            npx github-actions-ctrf summary ctrf/ctrf-report.json
+          if: always()
