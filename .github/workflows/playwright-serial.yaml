@@ -50,7 +50,7 @@ jobs:
 
         - name: Run playwright
           env:
-            NEXT_APP_URL: http://next-app:3000
+            NEXT_APP_URL: http://localhost:3000
           run: |
               npx playwright test 
 
