@@ -16,8 +16,12 @@ export default defineConfig({
     // Opt out of parallel tests on CI.
     workers: process.env.CI ? 1 : undefined,
 
-    // Reporter to use
-    reporter: 'html',
+    reporter: [
+        ['list'], // You can combine multiple reporters
+        ['playwright-ctrf-json-reporter', {
+            outputFile: process.env.SPLIT_INDEX ? `ctrf-report_${process.env.SPLIT_INDEX}.json` : 'ctrf-report.json',
+        }]
+    ],
 
     use: {
         // Base URL to use in actions like `await page.goto('/')`.
@@ -33,6 +37,7 @@ export default defineConfig({
             use: { ...devices['Desktop Chrome'] },
         },
     ],
+
     // Run your local dev server before starting the tests.
     webServer: {
         command: 'npm run start',
