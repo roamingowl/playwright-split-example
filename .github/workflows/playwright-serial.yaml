@@ -52,7 +52,7 @@ jobs:
           env:
             NEXT_APP_URL: http://next-app:3000
           run: |
-              npm playwright test 
+              npx playwright test 
 
 #        - name: Publish CTRF Test Summary Results
 #          run: |
