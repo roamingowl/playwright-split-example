@@ -8,19 +8,4 @@ services:
       restart: always
       ports:
         - 3000:3000
-#    cypress:
-#      container_name: cypress
-#      profiles:
-#        - cypress
-#      image: cypress/included:13.10.0
-#      volumes:
-#        - .:/e2e
-#      working_dir: /e2e
-#      environment:
-#        - CYPRESS_NEXT_APP_URL=${CYPRESS_NEXT_APP_URL:-http://localhost:3000}
-#        - CYPRESS_SPLIT=${CYPRESS_SPLIT:-}
-#        - CYPRESS_SPLIT_INDEX=${CYPRESS_SPLIT_INDEX:-}
-#        - CYPRESS_SPEC=${CYPRESS_SPEC:-}
-#      command: cypress run
-#      depends_on:
-#        - next-app
+

@@ -9,7 +9,7 @@ defaults:
         shell: bash
 
 jobs:
-    playwright-paralel:
+    playwright-parallel:
         strategy:
             matrix:
               split_index: [1, 2, 3]
@@ -40,12 +40,16 @@ jobs:
           run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
         - uses: actions/cache@v4
-          id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+          id: npm-cache
           with:
             path: ${{ steps.npm-cache-dir.outputs.dir }}
             key: pr-playwright-split-${{ matrix.split_index }}-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
             restore-keys: |
               pr-playwright-split-${{ matrix.split_index }}-${{ runner.os }}-node-
+
+        - uses: ./.github/actions/multiply-tests
+          with:
+            count: 20
 
         - run: npm i
 
@@ -72,7 +76,7 @@ jobs:
     results:
         runs-on: ubuntu-latest
         if: always()
-        needs: playwright-paralel
+        needs: playwright-parallel
         steps:
           - uses: actions/checkout@v4
 

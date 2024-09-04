@@ -11,7 +11,7 @@ export default function Home() {
 
       <main>
         <h1 className={styles.title}>
-          Example cypress app
+          Example playwright app
         </h1>
 
       </main>
